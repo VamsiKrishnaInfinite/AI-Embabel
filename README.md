@@ -1,9 +1,3 @@
----
-title: "NewsAI — Quick Start"
-authors:
-  - Vamsi Kosaraju
-date: 2026-03-03
----
 
 # 🚀 NewsAI — Quick Start
 
