@@ -1,149 +1,180 @@
-# NewsAI — Quick Start (Updated: 2026-03-02)
+---
+title: "NewsAI — Quick Start"
+authors:
+  - Vamsi Kosaraju
+date: 2026-03-03
+---
 
-Overview
-- NewsAI is a Spring Boot project that provides news article summarization and comparison features.
-- The workspace contains two related modules:
-  - `newsAI` — main Spring Boot application exposing JSON endpoints that accept article URLs and return structured DTOs (`SummaryResponse`, `ComparisonResponse`).
-  - `newsAI-embabel` — an Embabel-enabled module (agent) that exposes endpoints which accept classpath HTML file names and return textual analysis produced by an agent and a configured ChatModel (e.g., Ollama).
+# 🚀 NewsAI — Quick Start
 
-Contents of this README
-- Prerequisites
-- How to run (both modules)
-- Ollama (local LLM) notes and setup
-- Example curl requests for every endpoint (both modules)
+Summary
+- NewsAI is a Spring Boot project providing news article summarization and comparison features.
+- Two modules in this workspace:
+  - `newsAI` — the main Spring Boot app that accepts article URLs and returns structured JSON DTOs.
+  - `newsAI-embabel` — an Embabel agent module that processes local classpath HTML files and delegates to a ChatModel (e.g., Ollama). This module uses a pluggable agent design (interface + implementation) and extra configuration to work with model aliases.
+
+Table of contents
+- Required software
+- Quick build & run (clear, unambiguous steps)
+- Install & run Ollama + pull `llama3` model (concrete steps)
+- Endpoints with exact curl examples (for both modules and explicit ports)
+- How `newsAI-embabel` improves on `newsAI` (concise comparison)
 - Troubleshooting
 
-Prerequisites
-- Java 17+ (or the JDK version your project requires)
-- Maven (or use the included wrapper where available)
-- (Optional for Embabel agent) Ollama installed and a local model available if you want to run the `newsAI-embabel` module with a local ChatModel implementation
+Important note about ports (clarified)
+- This README uses the *explicit* ports discovered in the attached Postman collections:
+  - `newsAI` (main app): default port **8081** in the example collections
+  - `newsAI-embabel` (Embabel agent): default port **8080** in the example collections
+- You can change a module's port at runtime via `--server.port=<PORT>` or in `application.properties`. All curl examples below use the explicit port numbers above to avoid ambiguity.
 
-Ollama (local LLM) — Notes and Example Setup
-- The `newsAI-embabel` module expects a ChatModel bean that can connect to a model provider. Locally you can use Ollama.
-- Install Ollama (official instructions): https://ollama.com/
-- Pull or install a model you want to use. Example (check Ollama docs for exact model names):
+Requirements
+- Java 17+ (or the JDK required by your project)
+- Maven (or use the included `mvnw` / `mvnw.cmd` wrappers)
+- (Optional, required for Embabel agent) Ollama with a local model (see instructions below)
 
-  # Example (run in your shell; replace <model-name> with actual model)
-  ollama pull <model-name>
-  ollama list
+Quick build & run (PowerShell)
 
-- Make sure Ollama is running and accessible to Spring AI/Ollama integration. Depending on your setup you may need to run an Ollama daemon or ensure the model is available locally.
-- The project registers alias names such as `gpt-4.1-mini`, `llama3:latest`, and `llama3` in `newsAI-embabel` to satisfy an Embabel validator. Ensure the model you use is available under (or mapped to) one of those names, or update `EmbabelAiConfig` to use the model alias you have locally.
-
-Build and Run (Windows PowerShell examples)
-
-1) Build and run the main `newsAI` app
-
-Open PowerShell and run:
+1) Build & run the main `newsAI` app (port 8081 in examples)
 
 ```powershell
 cd C:\Users\vamsiko\Downloads\newsAI\newsAI
+# Build
 .\mvnw.cmd clean package -DskipTests
-# Run the packaged jar
-java -jar target\newsAI-0.0.1-SNAPSHOT.jar
-# Or run directly during development
-.\mvnw.cmd spring-boot:run
+# Run (explicit port used here to match examples)
+java -jar target\newsAI-0.0.1-SNAPSHOT.jar --server.port=8081
+# or (development):
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
 ```
 
-Default HTTP port: 8080 (unless overridden in `application.properties`).
-
-2) Build and run `newsAI-embabel` (Embabel agent module)
-
-If you have Maven installed, run from the `newsAI-embabel` directory. (There is no mvnw wrapper in that submodule in this workspace, so use a local Maven install or run from a parent aggregator if configured.)
+2) Build & run `newsAI-embabel` (port 8080 in examples)
 
 ```powershell
-cd C:\Users\vamsiko\Downloads\newsAI\newsAI-embabel
+cd C:\Users\vamsi\Downloads\newsAI\newsAI-embabel
+# Build
 mvn clean package -DskipTests
-# Or run in place
-mvn spring-boot:run
+# Run (explicit port)
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080"
 ```
 
-Before starting `newsAI-embabel`, ensure your ChatModel provider (e.g., Ollama) is installed and reachable; otherwise the application may fail to create the required beans.
+Install & run Ollama and pull the `llama3` model (Windows-focused, concrete steps)
 
-Endpoints and Example Requests
+1) Install Ollama
+- Follow official instructions at https://ollama.com/ for the latest installer. On Windows you can download the installer from the website and run it.
 
-A. `newsAI` module
-- Base path: POST http://localhost:8080/news/*
-- These endpoints expect form-encoded POST body parameters (application/x-www-form-urlencoded).
-
-1) Summarize — POST /news/summarize
-- Description: Summarize an article provided by a URL (or path depending on ArticleFetcher implementation).
-
-Example curl (PowerShell):
+2) Verify `ollama` command is available
 
 ```powershell
-curl -X POST "http://localhost:8080/news/summarize" `
+# Verify CLI
+ollama --version
+ollama list
+```
+
+3) Pull the `llama3` model (example model name used by this repo)
+
+```powershell
+# Pull model (replace 'llama3' with the exact model name you intend to use if needed)
+ollama pull llama3
+# Confirm it's available
+ollama list
+```
+
+4) Run the model locally (start a local server process for the model if required)
+
+```powershell
+# Run the model interactively or as a background process depending on your setup
+# Example (interactive):
+ollama run llama3
+# If your version of Ollama supports daemon/serve, use that to make an HTTP endpoint available to Spring AI
+# ollama serve (if supported by your installed version)
+```
+
+Notes about model aliases and `EmbabelAiConfig`
+- The `newsAI-embabel` module registers alias names such as `gpt-4.1-mini`, `llama3:latest`, and `llama3` to satisfy a validator used by the Embabel AgentPlatform. If your local Ollama model uses a different name, either:
+  - Pull the model with an alias that matches one of the names above (if your Ollama version supports this), or
+  - Update `newsAI-embabel/src/main/java/.../EmbabelAiConfig.java` to add the alias that matches your model name.
+
+Endpoints (explicit curl examples)
+
+A. `newsAI` module (JSON responses)
+- Base: POST http://localhost:8081/news
+- Summarize — POST /news/summarize
+  - Accepts form data: `url` (the article URL)
+
+```powershell
+curl -X POST "http://localhost:8081/news/summarize" `
   -H "Content-Type: application/x-www-form-urlencoded" `
   --data "url=https://example.com/article.html"
 ```
 
-Example response (JSON):
-
-```json
-{
-  "title": "Extracted Title",
-  "summary": "AI generated summary text...",
-  "sentiment": "Neutral"
-}
-```
-
-2) Compare — POST /news/compare
-- Description: Compare two articles by URL and return common themes, key differences and an AI assessment.
-
-Example curl (PowerShell):
+- Compare — POST /news/compare
+  - Accepts form data: `url1` and `url2`
 
 ```powershell
-curl -X POST "http://localhost:8080/news/compare" `
+curl -X POST "http://localhost:8081/news/compare" `
   -H "Content-Type: application/x-www-form-urlencoded" `
   --data "url1=https://example.com/article1.html" `
   --data "url2=https://example.com/article2.html"
 ```
 
-Example response (JSON):
-
-```json
-{
-  "commonTheme": "Politics / Policy",
-  "differences": ["Perspective A emphasizes X", "Perspective B emphasizes Y"],
-  "overallAssessment": "AI analysis text..."
-}
-```
-
-B. `newsAI-embabel` module
-- Base path: GET http://localhost:8080/news/*
-- These endpoints accept `file` (or `file1`/`file2`) query parameters that are classpath resource names (e.g., `uber.html`, `uber2.html`).
-
-1) Summarize local classpath file — GET /news/summarize
+B. `newsAI-embabel` module (agent — plain text responses)
+- Base: GET http://localhost:8080/news
+- Summarize local resource — GET /news/summarize?file=<filename>
 
 ```bash
 curl "http://localhost:8080/news/summarize?file=uber.html"
 ```
 
-Response: plain text string produced by the agent (e.g., a concise summary).
-
-2) Compare two local classpath files — GET /news/compare
+- Compare two local resources — GET /news/compare?file1=<f1>&file2=<f2>
 
 ```bash
 curl "http://localhost:8080/news/compare?file1=uber.html&file2=uber2.html"
 ```
 
-Response: plain text string (comparison/analysis) returned by the agent.
+How `newsAI-embabel` improves on `newsAI` (concise comparison)
 
-Troubleshooting & Tips
-- If you see bean creation errors when starting `newsAI-embabel`, verify your ChatModel/Ollama setup and the model aliasing in `EmbabelAiConfig`.
-- If the port is already in use, start the app with a different port:
+- Architecture
+  - newsAI: a single Spring service handles fetching, prompting, and returning results.
+  - newsAI-embabel: introduces an explicit `NewsAgent` interface and `NewsAgentImpl`. That separation enables clearer responsibilities, easier testing, and pluggable agent implementations.
 
-```powershell
-# Run jar with different port
-java -jar target\newsAI-0.0.1-SNAPSHOT.jar --server.port=9090
+- Model provider & validator handling
+  - newsAI: uses a ChatClient builder and a direct ChatModel approach.
+  - newsAI-embabel: supplies a `ModelProvider` and alias mapping (`gpt-4.1-mini`, `llama3`), which avoids validator errors when working with non-standard model names and improves flexibility when swapping models.
 
-# Or when using mvn spring-boot:run
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=9090"
+- Resource handling & logging
+  - newsAI-embabel improves the `ArticleFetcher` with clearer logging, robust resource path resolution, and consistent error messages; this makes debugging and local testing easier.
+
+- Documentation & observability
+  - The Embabel module includes JavaDoc, SLF4J logs on method entry/exit, and better exception messages — all of which help maintainability and production support.
+
+Collectively these changes make the Embabel module easier to run locally with different LLM providers, simpler to test, and more robust in the presence of model aliasing constraints.
+
+
+
+```toml
+# newsai.manifest.toml
+name = "NewsAI"
+version = "0.0.1"
+modules = ["newsAI", "newsAI-embabel"]
+ports = { newsAI = 8081, embabel = 8080 }
+models = ["llama3", "gpt-4.1-mini"]
+maintainer = "Vamsi Kosaraju <vamsiko@infinite.com>"
 ```
 
-- Logging: The project uses SLF4J. Adjust logging levels in `application.properties` to see more/less detail.
-
-- Local testing: For quick local tests you can place sample HTML files in `src/main/resources` (module depending) and use the Embabel endpoints to fetch them by name.
 
 
+NewsAI — Summarize & Compare News Reports
+```
+
+Troubleshooting (explicit, unambiguous guidance)
+- If the Embabel app fails at startup with a ChatModel bean error:
+  1. Confirm `ollama` is installed and `ollama list` shows the model.
+  2. Ensure the model name matches one of the aliases in `EmbabelAiConfig` or update `EmbabelAiConfig`.
+- If endpoints return 404:
+  - Confirm the app process is running and listening on the port shown in your run command.
+- Want to run both modules at the same time? Use explicit ports when starting each jar (see Quick run commands above).
+
+Helpful Postman / collection files
+- I included two Postman collections in the workspace (copy to Postman):
+  - `spring-ai-demo.json` — example collection covering a summarize request (uses port 8081 in the collection)
+  - `spring-embabble.json` — example collection for Embabel agent endpoints (uses port 8080 in the collection)
 
