@@ -145,9 +145,5 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=9090"
 
 - Local testing: For quick local tests you can place sample HTML files in `src/main/resources` (module depending) and use the Embabel endpoints to fetch them by name.
 
-Questions or next steps
-- Want a short sample Postman collection or a `README.txt` instead? I can also add example unit tests that call the services directly.
 
----
-(If you need the README placed somewhere else in the repo, or want a `README.txt` rather than Markdown, tell me and I will move/ recreate it.)
 
