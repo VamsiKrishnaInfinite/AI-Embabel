@@ -1,0 +1,20 @@
+﻿# Maven / Java
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+!.mvn/wrapper/maven-wrapper.jar
+# Eclipse / IntelliJ / VS Code
+.idea/
+*.iml
+.vscode/
+project.buildpath
+.settings/
+# Operating system
+.DS_Store
+Thumbs.db
+# Local environment / credentials
+*.env
+*.keystore
