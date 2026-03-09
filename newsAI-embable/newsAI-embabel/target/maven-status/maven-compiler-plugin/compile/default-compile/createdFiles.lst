@@ -1,0 +1,4 @@
+com\infinite\newsAIEmbael\tools\ArticleFetcher.class
+com\infinite\newsAIEmbael\NewsAiEmbabelApplication.class
+com\infinite\newsAIEmbael\agent\NewsAgentImpl.class
+com\infinite\newsAIEmbael\agent\NewsAgent.class

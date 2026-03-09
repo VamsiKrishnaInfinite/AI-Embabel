@@ -1,0 +1,57 @@
+{
+  "info": {
+    "name": "spring-embabble",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "sum",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "GET http://localhost:8080/news/summarize?file=<filename>",
+          "protocol": "GET http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "news",
+            "summarize"
+          ],
+          "query": [
+            {
+              "key": "file",
+              "value": "<filename>"
+            }
+          ],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "comp",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "",
+          "protocol": "",
+          "host": [],
+          "path": [],
+          "query": [],
+          "variable": []
+        }
+      }
+    }
+  ],
+  "variable": []
+}
