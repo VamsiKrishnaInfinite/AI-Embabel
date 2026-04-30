@@ -12,40 +12,41 @@ The content includes:
 ---
 
 ## 📁 Folder Structure
-/Elevance KT
-│
-├── CM-DM&Integration
-│ ├── CM
-│ │ ├── Week1
-│ │ ├── Week2
-│ │ ├── Week3
-│ │ └── Week4
-│ │
-│ ├── DM
-│ │ ├── Week1
-│ │ ├── Week2
-│ │ ├── Week3
-│ │ └── Week4
-│ │
-│ └── Integration
-│ ├── Week1
-│ ├── Week2
-│ ├── Week3
-│ └── Week4
-│
-└── UM&Provider
-│ ├── UM
-│ │ ├── Week1
-│ │ ├── Week2
-│ │ ├── Week3
-│ │ └── Week4
-│ │
-│ ├── Provider
-│ │ ├── Week1
-│ │ ├── Week2
-│ │ ├── Week3
-│ │ └── Week4
+## 📁 Folder Structure
 
+    /Elevance KT
+    │
+    ├── CM-DM&Integration
+    │   ├── CM
+    │   │   ├── Week1
+    │   │   ├── Week2
+    │   │   ├── Week3
+    │   │   └── Week4
+    │   │
+    │   ├── DM
+    │   │   ├── Week1
+    │   │   ├── Week2
+    │   │   ├── Week3
+    │   │   └── Week4
+    │   │
+    │   └── Integration
+    │       ├── Week1
+    │       ├── Week2
+    │       ├── Week3
+    │       └── Week4
+    │
+    └── UM&Provider
+        ├── UM
+        │   ├── Week1
+        │   ├── Week2
+        │   ├── Week3
+        │   └── Week4
+        │
+        └── Provider
+            ├── Week1
+            ├── Week2
+            ├── Week3
+            └── Week4
 ---
 
 ## 📂 Folder Description
