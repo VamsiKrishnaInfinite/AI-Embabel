@@ -12,7 +12,6 @@ The content includes:
 ---
 
 ## 📁 Folder Structure
-## 📁 Folder Structure
 
     /Elevance KT
     │
